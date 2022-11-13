@@ -10,7 +10,7 @@ COPY package-lock.json ./
 RUN npm i
 
 RUN mkdir logs
-COPY src ./src
-COPY deployments ./deployments
+COPY src/ ./src
+COPY deployments/ ./deployments
 
 CMD npm run dev-start
