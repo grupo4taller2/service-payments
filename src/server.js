@@ -20,8 +20,8 @@ fastify.register(route_aux);
 const start = async () => {
   try {;
     await fastify.listen({
-      host: process.env.SERVICE_PAYMENTS_HOST,
-      port: process.env.SERVICE_PAYMENTS_PORT,
+      host: process.env.SERVICE_PAYMENTS_HOST ,
+      port: process.env.SERVICE_PAYMENTS_PORT || process.env.PORT,
     });
     console.log(`server listening on ${fastify.server.address().port}`)
     //fastify.log.info(`server listening on ${fastify.server.address().port}`);
