@@ -7,7 +7,6 @@ const fastify = require("fastify")({ logger: true });
 const route_aux = require("./new_handlers/new_routes");
 
 
-
 // Declares routes
 routes.forEach(route => fastify.route(route({ config, services })));
 //routes.forEach(route => fastify.register(route));
