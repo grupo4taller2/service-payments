@@ -4,6 +4,7 @@ const getDepositHandler = require("../handlers/getDepositHandler");
 const walletService = require("./new_wallet");
 const { tripsPaid } = require("../database/database");
 const driversPayments = require("./driverPayments");
+const { REPL_MODE_SLOPPY } = require("repl");
 
 async function getContract(config, wallet) {
     /*console.log(config.contractAddress);
@@ -36,9 +37,9 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
             amountSent: firstEvent.args.amount,
           };
           const doc = {
-            rider_username: riderUsername,
+            riderUsername: riderUsername,
             amount: amountToSend,
-            driver_username: driverUsername,
+            driverUsername: driverUsername,
             tripID: tripID
           }
           driversPayments.saveAmountToDriver(driverUsername,amountToSend);

@@ -4,13 +4,17 @@ const {
   getRiderWalletSchema,
   DepositPostSchema,
   WithdrawPostSchema,
-  createDriverWalletSchema}= require("../schemas/payments_schema");
+  createDriverWalletSchema,
+  getRiderBalanceSchema,
+  getDriverDataWalletSchema,}= require("../schemas/payments_schema");
 
 const createRiderWalletHandler = require("./createRiderWallet");
-const getRiderWalletHandler = require("./getWalletHandler");
+const getRiderWalletHandler = require("./getRIderWallet");
 const createDepositHandeler = require("./createDeposit");
-const withdrawHandler = require("./withdraw");
+const withdrawHandler = require("./createWithdraw");
 const createDriverWalletHandler = require("./createDriverWallet");
+const getRiderBalance = require("./getRiderBalance");
+const getDriverWalletData = require("./getDriverWallet");
 
 async function ridersWalletRoutes(fastify, getUserOpts, done) {
     fastify.post(
@@ -36,6 +40,14 @@ async function ridersWalletRoutes(fastify, getUserOpts, done) {
         handler:getRiderWalletHandler,
       }
     )
+
+    fastify.get(
+      '/drivers/:username/wallet/',
+      {
+        schema: getDriverDataWalletSchema,
+        handler:getDriverWalletData,
+      }
+    )
     
     fastify.post(
       '/create/deposit',
@@ -51,6 +63,15 @@ async function ridersWalletRoutes(fastify, getUserOpts, done) {
         handler: withdrawHandler,
       }
     )
+    /*
+    fastify.get(
+      '/riders/:username/balance/',
+      {
+        schema: getRiderBalanceSchema,
+        handler:getRiderBalance,
+      }
+    )*/
+
     done();
   }
   

@@ -15,8 +15,12 @@ async function createWalletRider(riderUsername){
     walletAddres: wallet.address,
     privateKey: wallet.privateKey
   }
+  const docReturn = {
+    riderUsername: riderUsername,
+    walletAddres: wallet.address,
+  }
   ridersWallets.insertOne(doc);
-  return doc;
+  return docReturn;
 };
 
 async function createWalletDriver(driverUsername){
@@ -29,12 +33,17 @@ async function createWalletDriver(driverUsername){
     privateKey: wallet.privateKey
   }
   const docAmount = {
-    driver_username: driverUsername,
+    driverUsername: driverUsername,
     amount: 0,
+  }
+
+  const docReturn = {
+    driverUsername: driverUsername,
+    walletAddres: wallet.address,
   }
   driversWallets.insertOne(doc);
   driversAmount.insertOne(docAmount);
-  return doc;
+  return docReturn;
 };
 
 async function getDeployerWallet (){
@@ -52,9 +61,30 @@ async function getWalletsData(){
   return accounts;
 };
 
-async function getWalletData(username){
-  return ridersWallets.findOne(username);
+async function getRiderWalletData(username){
+  const riderWallet = await ridersWallets.findOne({riderUsername:username});
+  const riderBalance = await getRiderBalance(username);
+  const doc = {
+    riderUsername: riderWallet.riderUsername,
+    walletAddres: riderWallet.walletAddres,
+    balance: riderBalance.balance,
+  }
+  console.log(doc);
+  return doc;
 };
+
+async function getDriverWalletData(username){
+  const driverWallet = await driversWallets.findOne({driverUsername:username});
+  const driverBalance = await getDriverBalance(username);
+  const doc = {
+    driverUsername: driverWallet.driverUsername,
+    walletAddres: driverWallet.walletAddres,
+    balance: driverBalance.balance,
+  }
+  console.log(doc);
+  return doc;
+};
+
 
 async function getRiderWallet(username){
     const provider = new ethers.providers.AlchemyProvider(config.network, process.env.ALCHEMY_API_KEY);
@@ -67,9 +97,6 @@ async function getRiderWallet(username){
       walletAddres: rider_wallet_doc.walletAddres,
       privateKey: rider_wallet_doc.privateKey
     }
-    console.log(rider_wallet);
-    console.log(rider_wallet.privateKey);
-    console.log(provider);
     return new ethers.Wallet(rider_wallet.privateKey, provider);
   };
 
@@ -83,10 +110,77 @@ async function getDriverWallet(username){
   };
 
 
+async function getRiderBalance(username){
+  riderWallet = await getRiderWallet(username);
+  const balance = await riderWallet.getBalance();
+  etherBalance = await ethers.utils.formatEther(balance.toString());
+  balanceNumber = parseFloat(etherBalance);
+  const doc = {
+    balance: balanceNumber,
+  }
+  return doc;
+}
+
+
+
+async function getDriverBalance(username){
+  driverWallet = await getDriverWallet(username);
+  const balance = await driverWallet.getBalance();
+  etherBalance = await ethers.utils.formatEther(balance.toString());
+  balanceNumber = parseFloat(etherBalance);
+  const doc = {
+    balance: balanceNumber,
+  }
+  return doc;
+}
+
+
+async function verifyRiderBalance(username, amount){
+  console.log("VERIFYYYYYYY")
+  riderWallet = await getRiderWallet(username);
+  const balance = await riderWallet.getBalance();
+  etherBalance = await ethers.utils.formatEther(balance.toString());
+  balanceNumber = parseFloat(etherBalance);
+  if(amount > balanceNumber){
+    return false;
+  }else{
+    return true;
+  }
+}
+
+async function verifyDriversExistance(username){
+  const query = { driverUsername: username };
+  driver_wallet = await driversWallets.findOne(query);
+  if(driver_wallet === null){
+    return false;
+  } else{
+    return true;
+  }
+}
+
+
+async function verifyRidersExistance(username){
+  const query = { riderUsername: username };
+  rider_wallet = await ridersWallets.findOne(query);
+  if(rider_wallet === null){
+    return false;
+  } else{
+    return true;
+  }
+}
+
+
+
+
 exports.createWalletRider = createWalletRider;
 exports.createWalletDriver = createWalletDriver;
 exports.getDeployerWallet = getDeployerWallet;
 exports.getWalletsData = getWalletsData;
-exports.getWalletData = getWalletData;
+exports.getRiderWalletData = getRiderWalletData;
 exports.getRiderWallet = getRiderWallet;
 exports.getDriverWallet = getDriverWallet;
+exports.getRiderBalance = getRiderBalance;
+exports.verifyRiderBalance = verifyRiderBalance;
+exports.getDriverWalletData = getDriverWalletData;
+exports.verifyDriversExistance = verifyDriversExistance;
+exports.verifyRidersExistance = verifyRidersExistance;

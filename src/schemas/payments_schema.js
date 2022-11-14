@@ -1,7 +1,7 @@
 
 const createRiderWalletSchema = {
     description: 'Create a wallet for a rider',
-    tags: ['Riders Wallet'],
+    tags: ['Payments Riders'],
     params: {
         username: {
         type: 'string',
@@ -12,7 +12,7 @@ const createRiderWalletSchema = {
 
 const createDriverWalletSchema = {
   description: 'Create a wallet for a driver',
-  tags: ['Drivers Wallet'],
+  tags: ['Payments Drivers'],
   params: {
       username: {
       type: 'string',
@@ -23,7 +23,7 @@ const createDriverWalletSchema = {
 
 const getRiderWalletSchema = {
     description: 'Get a wallet for a rider',
-    tags: ['Riders Wallet'],
+    tags: ['Payments Riders'],
     params: {
         username: {
         type: 'string',
@@ -33,9 +33,20 @@ const getRiderWalletSchema = {
 }
 
 
+const getDriverDataWalletSchema = {
+  description: 'Get a wallet for a rider',
+  tags: ['Payments Drivers'],
+  params: {
+      username: {
+      type: 'string',
+      default: 'username',
+      },
+  },
+}
+
 const DepositPostSchema = {
     description: 'Endpoint for creating a deposit',
-    tags: ['Deposits'],
+    tags: ['Payments'],
     body: {
       description: 'Payload for creating a new deposit',
       type: 'object',
@@ -46,12 +57,22 @@ const DepositPostSchema = {
         tripID: { type: 'string' },
       },
     },
+    response: {
+      400: {
+        description: 'Bad Request. Insufficient Funds',
+        type: 'object',
+        properties: {
+          message: { type: 'string', default: 'Error. Insufficient Funds' },
+          username: { type: 'string' },
+        },
+      },
+    },
   };
 
 
 const WithdrawPostSchema = {
     description: 'Endpoint for creating a withdraw',
-    tags: ['Withdraw'],
+    tags: ['Payments'],
     body: {
       description: 'Payload for creating a new withdraw',
       type: 'object',
@@ -63,9 +84,22 @@ const WithdrawPostSchema = {
   };
 
 
+const getRiderBalanceSchema = {
+  description: 'Get balance for a rider',
+    tags: ['Payments Riders'],
+    params: {
+        username: {
+        type: 'string',
+        default: 'username',
+        },
+    },
+}
+
 
 exports.createRiderWalletSchema = createRiderWalletSchema;
 exports.createDriverWalletSchema = createDriverWalletSchema;
 exports.getRiderWalletSchema = getRiderWalletSchema;
 exports.DepositPostSchema = DepositPostSchema;
 exports.WithdrawPostSchema = WithdrawPostSchema;
+exports.getRiderBalanceSchema = getRiderBalanceSchema;
+exports.getDriverDataWalletSchema = getDriverDataWalletSchema;
