@@ -37,6 +37,7 @@
     "fastify": "^4.8.1",
     "fastify-plugin": "^4.2.1",
     "@fastify/swagger": "^7.6.1",
+    "@fastify/formbody": "^7.3.0",
     "fs-extra": "^9.0.1",
     "hardhat-contract-sizer": "^2.0.2",
     "hardhat-docgen": "^1.0.3",

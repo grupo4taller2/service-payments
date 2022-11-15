@@ -30,6 +30,16 @@ const getRiderWalletSchema = {
         default: 'username',
         },
     },
+    response: {
+      404: {
+        description: 'Bad Request. Insufficient Funds',
+        type: 'object',
+        properties: {
+          message: { type: 'string', default: 'Error. Insufficient Funds' },
+          username: { type: 'string' },
+        },
+      },
+    },
 }
 
 
@@ -42,9 +52,19 @@ const getDriverDataWalletSchema = {
       default: 'username',
       },
   },
+  response: {
+    404: {
+      description: 'Bad Request. Insufficient Funds',
+      type: 'object',
+      properties: {
+        message: { type: 'string', default: 'Error. Insufficient Funds' },
+        username: { type: 'string' },
+      },
+    },
+  },
 }
 
-const DepositPostSchema = {
+const PaymentPostSchema = {
     description: 'Endpoint for creating a deposit',
     tags: ['Payments'],
     body: {
@@ -95,11 +115,22 @@ const getRiderBalanceSchema = {
     },
 }
 
+const getDriverEarnedMoneySchema = {
+  description: 'Get earned money for a drider',
+    tags: ['Payments Drivers'],
+    params: {
+        username: {
+        type: 'string',
+        default: 'username',
+        },
+    },
+}
 
 exports.createRiderWalletSchema = createRiderWalletSchema;
 exports.createDriverWalletSchema = createDriverWalletSchema;
 exports.getRiderWalletSchema = getRiderWalletSchema;
-exports.DepositPostSchema = DepositPostSchema;
+exports.PaymentPostSchema = PaymentPostSchema;
 exports.WithdrawPostSchema = WithdrawPostSchema;
 exports.getRiderBalanceSchema = getRiderBalanceSchema;
 exports.getDriverDataWalletSchema = getDriverDataWalletSchema;
+exports.getDriverEarnedMoneySchema  = getDriverEarnedMoneySchema ;

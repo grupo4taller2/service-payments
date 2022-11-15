@@ -5,7 +5,7 @@ const driversPayments = require("../new_services/driverPayments");
 async function createWithdrawPOST(req,reply) {
   const driverExists = await walletService.verifyDriversExistance(req.body.driver_username);
     if(driverExists === false){
-      reply.code(404).send({
+      return reply.code(404).send({
         message: "Error. Driver Username not found",
         username: req.body.driver_username,
       })

@@ -2,18 +2,19 @@
 const { 
   createRiderWalletSchema,
   getRiderWalletSchema,
-  DepositPostSchema,
+  PaymentPostSchema,
   WithdrawPostSchema,
   createDriverWalletSchema,
   getRiderBalanceSchema,
+  getDriverEarnedMoneySchema,
   getDriverDataWalletSchema,}= require("../schemas/payments_schema");
 
 const createRiderWalletHandler = require("./createRiderWallet");
 const getRiderWalletHandler = require("./getRIderWallet");
-const createDepositHandeler = require("./createDeposit");
+const createPaymentHandeler = require("./createPayment");
 const withdrawHandler = require("./createWithdraw");
 const createDriverWalletHandler = require("./createDriverWallet");
-const getRiderBalance = require("./getRiderBalance");
+const getDriverEarnedMoney = require("./getDriverEarnedMoney");
 const getDriverWalletData = require("./getDriverWallet");
 
 async function ridersWalletRoutes(fastify, getUserOpts, done) {
@@ -34,7 +35,7 @@ async function ridersWalletRoutes(fastify, getUserOpts, done) {
     );
 
     fastify.get(
-      '/riders/:username/wallet/',
+      '/riders/:username/wallet',
       {
         schema: getRiderWalletSchema,
         handler:getRiderWalletHandler,
@@ -42,7 +43,7 @@ async function ridersWalletRoutes(fastify, getUserOpts, done) {
     )
 
     fastify.get(
-      '/drivers/:username/wallet/',
+      '/drivers/:username/wallet',
       {
         schema: getDriverDataWalletSchema,
         handler:getDriverWalletData,
@@ -50,10 +51,10 @@ async function ridersWalletRoutes(fastify, getUserOpts, done) {
     )
     
     fastify.post(
-      '/create/deposit',
+      '/create/payment',
       {
-        schema: DepositPostSchema,
-        handler: createDepositHandeler,
+        schema: PaymentPostSchema,
+        handler: createPaymentHandeler,
       }
     )
     fastify.post(
@@ -63,14 +64,13 @@ async function ridersWalletRoutes(fastify, getUserOpts, done) {
         handler: withdrawHandler,
       }
     )
-    /*
     fastify.get(
-      '/riders/:username/balance/',
+      '/drivers/:username/earned/money',
       {
-        schema: getRiderBalanceSchema,
-        handler:getRiderBalance,
+        schema: getDriverEarnedMoneySchema,
+        handler: getDriverEarnedMoney,
       }
-    )*/
+    )
 
     done();
   }

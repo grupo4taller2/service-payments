@@ -159,10 +159,23 @@ async function verifyDriversExistance(username){
 }
 
 
+async function getDriverEarnedMoney(username){
+  query = {driverUsername: username};
+  const balance = await driversAmount.findOne(query);
+  const doc = {
+    username: balance.driverUsername,
+    amount: balance.amount,
+  }
+  return doc;
+}
+
+
 async function verifyRidersExistance(username){
   const query = { riderUsername: username };
   rider_wallet = await ridersWallets.findOne(query);
+  console.log(rider_wallet);
   if(rider_wallet === null){
+    console.log("SOY FALSO")
     return false;
   } else{
     return true;
@@ -184,3 +197,4 @@ exports.verifyRiderBalance = verifyRiderBalance;
 exports.getDriverWalletData = getDriverWalletData;
 exports.verifyDriversExistance = verifyDriversExistance;
 exports.verifyRidersExistance = verifyRidersExistance;
+exports.getDriverEarnedMoney = getDriverEarnedMoney;

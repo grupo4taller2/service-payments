@@ -10,6 +10,7 @@ const route_aux = require("./new_handlers/new_routes");
 // Declares routes
 routes.forEach(route => fastify.route(route({ config, services })));
 //routes.forEach(route => fastify.register(route));
+fastify.register(require('@fastify/formbody'));
 fastify.register(swagger);
 fastify.register(route_aux, {prefix: '/api/v1'});
 //fastify.register(routes_2);

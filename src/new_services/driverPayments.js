@@ -5,7 +5,11 @@ async function saveAmountToDriver(driverUsername,amount){
     const commision = (amountFloat * 20) / 100;
     const  finalPayment = amountFloat - commision;
     let previousValue = await driversAmount.findOne({ driverUsername: driverUsername });
+    console.log("PREVIOS");
+    console.log(previousValue.amount);
     const newAmount = previousValue.amount + finalPayment;
+    console.log("NEWw");
+    console.log(newAmount);
     const options = { upsert: true };
     const updateDoc = {
         $set: {
