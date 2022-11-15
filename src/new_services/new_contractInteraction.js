@@ -10,6 +10,7 @@ async function getContract(config, wallet) {
   return new ethers.Contract(config.contractAddress, config.contractAbi, wallet);
 };
 
+
 const deposits = {};
 
 async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
