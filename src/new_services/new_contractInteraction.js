@@ -7,20 +7,14 @@ const driversPayments = require("./driverPayments");
 const { REPL_MODE_SLOPPY } = require("repl");
 
 async function getContract(config, wallet) {
-    /*console.log(config.contractAddress);
-    console.log(config.contractAbi);
-    console.log(wallet);*/
   return new ethers.Contract(config.contractAddress, config.contractAbi, wallet);
 };
 
 const deposits = {};
 
 async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
-    console.log("LLEGUEEEEE");
     riderWallet = await walletService.getRiderWallet(riderUsername);
-    //const ownerWallet = await walletService.getDeployerWallet();
     const basicPayments = await getContract(config, riderWallet);
-    console.log("LLEGUEEEEEEE 2");
     const tx = await basicPayments.deposit({
       value: await ethers.utils.parseEther(amountToSend.toString()).toHexString(),
     });
@@ -64,12 +58,9 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
 
 
 async function withdraw(driverUsername, amountToWithdraw) {
-    console.log("LLEGUEEEEE WITHDRAWW");
     const driverWallet = await walletService.getDriverWallet(driverUsername);
     const ownerWallet = await walletService.getDeployerWallet();
     const basicPayments = await getContract(config, ownerWallet);
-    //new_contract = basicPayments.connect(ownerWallet);
-    console.log("LLEGUEEEEEEE WITHDRAW 22");
     const tx = await basicPayments.sendPayment(
         driverWallet.address,
         await ethers.utils.parseEther(amountToWithdraw.toString()).toHexString(),{
@@ -107,6 +98,49 @@ async function withdraw(driverUsername, amountToWithdraw) {
     return tx;
 };
 
+async function firstDeposit(username,amount){
+  const riderWallet = await walletService.getRiderWallet(username);
+  const ownerWallet = await walletService.getDeployerWallet();
+  const basicPayments = await getContract(config, ownerWallet);
+  const tx = await basicPayments.sendPayment(
+      riderWallet.address,
+      await ethers.utils.parseEther(amount.toString()).toHexString(),{
+          gasLimit: 100000,
+      }
+  );
+  tx.wait(1).then(
+      receipt => {
+      console.log("Transaction mined");
+      const firstEvent = receipt && receipt.events && receipt.events[0];
+      console.log(firstEvent);
+      if (firstEvent && firstEvent.event == "PaymentMade") {
+          //Una vez confirmada la transaccion
+          //guardar, etc
+          deposits[tx.hash] = {
+          senderAddress: firstEvent.args.sender,
+          amountSent: firstEvent.args.amount,
+          };
+      } else {
+          //falla la transaccion
+          console.error(`Payment not created in tx ${tx.hash}`);
+      }
+      },
+      error => {
+      const reasonsList = error.results && Object.values(error.results).map(o => o.reason);
+      const message = error instanceof Object && "message" in error ? error.message : JSON.stringify(error);
+      console.error("reasons List");
+      console.error(reasonsList);
+
+      console.error("message");
+      console.error(message);
+      },
+  );
+  return tx;
+};
+
+
+
+
 const getDepositReceipt =
   ({}) =>
   async depositTxHash => {
@@ -115,4 +149,5 @@ const getDepositReceipt =
 
 exports.deposit = deposit;
 exports.withdraw = withdraw;
+exports.firstDeposit = firstDeposit;
 
