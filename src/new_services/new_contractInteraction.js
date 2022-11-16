@@ -59,7 +59,7 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
         const message = error instanceof Object && "message" in error ? error.message : JSON.stringify(error);
         console.error("reasons List");
         console.error(reasonsList);
-
+        
         console.error("message");
         console.error(message);
       },

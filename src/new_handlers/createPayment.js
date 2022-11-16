@@ -33,7 +33,6 @@ async function createPaymentPOST(req,reply) {
 let transaction = contractInteraction.deposit(req.body.rider_username, req.body.amount,
     req.body.driver_username,
     req.body.tripID);
-console.log(transaction);
 return transaction;
 }
 

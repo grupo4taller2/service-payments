@@ -12,10 +12,10 @@ async function createWithdrawPOST(req,reply) {
     }
     
     let verify = await userPayments.verifyUnclaimedMoney(req.body.username,req.body.amount);
-    if(verify === false || req.body.amounT === 0){
+    if(verify === false || req.body.amount === 0){
       return reply.status(400).send(
         {
-          message: 'Error. Insufficient Funds',
+          message: 'Error. Insufficient Funds or Amount is 0',
           username: req.body.username,
         },
       );

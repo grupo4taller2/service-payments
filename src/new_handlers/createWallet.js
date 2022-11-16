@@ -10,7 +10,7 @@ async function ridersWalletPOST(req, reply) {
       })
     }
    let reply_service = await walletService.createWallet(req.params.username);
-    let transaction = contractInteraction.firstDeposit(req.params.username, 0.01);
+    let transaction = contractInteraction.firstDeposit(req.params.username, 0.03);
     return reply.code(200).send(reply_service);;
   }
 
