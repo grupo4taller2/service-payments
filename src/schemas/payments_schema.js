@@ -21,6 +21,19 @@ const createDriverWalletSchema = {
   },
 };
 
+
+const createWalletSchema = {
+  description: 'Create a wallet for a user',
+  tags: ['Payments Users'],
+  params: {
+      username: {
+      type: 'string',
+      default: 'username',
+      },
+  },
+};
+
+
 const getRiderWalletSchema = {
     description: 'Get a wallet for a rider',
     tags: ['Payments Riders'],
@@ -41,6 +54,29 @@ const getRiderWalletSchema = {
       },
     },
 }
+
+
+const getUserWalletSchema = {
+  description: 'Get a wallet for a user',
+  tags: ['Payments Users'],
+  params: {
+      username: {
+      type: 'string',
+      default: 'username',
+      },
+  },
+  response: {
+    404: {
+      description: 'Bad Request. Insufficient Funds',
+      type: 'object',
+      properties: {
+        message: { type: 'string', default: 'Error. Insufficient Funds' },
+        username: { type: 'string' },
+      },
+    },
+  },
+}
+
 
 
 const getDriverDataWalletSchema = {
@@ -97,8 +133,9 @@ const WithdrawPostSchema = {
       description: 'Payload for creating a new withdraw',
       type: 'object',
       properties: {
-        driver_username: { type: 'string' },
+        username: { type: 'string' },
         amount: { type: 'number' },
+        walletAddress: {type: 'string' }
       },
     },
   };
@@ -126,6 +163,19 @@ const getDriverEarnedMoneySchema = {
     },
 }
 
+
+const getUserUnclaimedMoneySchema = {
+  description: 'Get user unclaimed money',
+    tags: ['Payments Users'],
+    params: {
+        username: {
+        type: 'string',
+        default: 'username',
+        },
+    },
+}
+
+
 exports.createRiderWalletSchema = createRiderWalletSchema;
 exports.createDriverWalletSchema = createDriverWalletSchema;
 exports.getRiderWalletSchema = getRiderWalletSchema;
@@ -134,3 +184,6 @@ exports.WithdrawPostSchema = WithdrawPostSchema;
 exports.getRiderBalanceSchema = getRiderBalanceSchema;
 exports.getDriverDataWalletSchema = getDriverDataWalletSchema;
 exports.getDriverEarnedMoneySchema  = getDriverEarnedMoneySchema ;
+exports.createWalletSchema = createWalletSchema;
+exports.getUserWalletSchema = getUserWalletSchema;
+exports.getUserUnclaimedMoneySchema = getUserUnclaimedMoneySchema;

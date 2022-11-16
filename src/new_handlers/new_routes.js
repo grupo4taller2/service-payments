@@ -7,7 +7,10 @@ const {
   createDriverWalletSchema,
   getRiderBalanceSchema,
   getDriverEarnedMoneySchema,
-  getDriverDataWalletSchema,}= require("../schemas/payments_schema");
+  getDriverDataWalletSchema,
+  createWalletSchema,
+  getUserWalletSchema,
+  getUserUnclaimedMoneySchema,}= require("../schemas/payments_schema");
 
 const createRiderWalletHandler = require("./createRiderWallet");
 const getRiderWalletHandler = require("./getRIderWallet");
@@ -16,9 +19,20 @@ const withdrawHandler = require("./createWithdraw");
 const createDriverWalletHandler = require("./createDriverWallet");
 const getDriverEarnedMoney = require("./getDriverEarnedMoney");
 const getDriverWalletData = require("./getDriverWallet");
+const createWallet = require("./createWallet");
+const getWallet = require("./getWallet");
+const getUserUnclaimedMoney = require("./getUnclaimedMoney");
 
 async function ridersWalletRoutes(fastify, getUserOpts, done) {
-    fastify.post(
+  
+  fastify.post(
+    '/users/:username/wallet/create',
+    {
+      schema: createWalletSchema,
+      handler: createWallet,
+    },
+  );  
+  fastify.post(
       '/riders/:username/wallet/create',
       {
         schema: createRiderWalletSchema,
@@ -33,6 +47,15 @@ async function ridersWalletRoutes(fastify, getUserOpts, done) {
         handler: createDriverWalletHandler,
       },
     );
+
+
+    fastify.get(
+      '/users/:username/wallet',
+      {
+        schema: getUserWalletSchema,
+        handler:getWallet,
+      }
+    )
 
     fastify.get(
       '/riders/:username/wallet',
@@ -69,6 +92,14 @@ async function ridersWalletRoutes(fastify, getUserOpts, done) {
       {
         schema: getDriverEarnedMoneySchema,
         handler: getDriverEarnedMoney,
+      }
+    )
+
+    fastify.get(
+      '/users/:username/unclaimed/money',
+      {
+        schema: getUserUnclaimedMoneySchema,
+        handler: getUserUnclaimedMoney,
       }
     )
 

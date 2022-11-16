@@ -12,9 +12,14 @@ const ridersWallets = database.collection('ridersWallets');
 const driversWallets = database.collection('driversWallets');
 const tripsPaid = database.collection('tripsPaid');
 const driversAmount = database.collection('driversAmount');
+const walletsDB = database.collection('usersWallets');
+const usersBalanceDB = database.collection('usersBalance');
 
 exports.ridersWallets = ridersWallets;
 exports.driversWallets = driversWallets;
 exports.tripsPaid = tripsPaid;
 exports.driversAmount = driversAmount;
+exports.walletsDB = walletsDB;
+exports.usersBalanceDB = usersBalanceDB;
+
 //exports.RiderQualyAvgGETSchema = RiderQualyAvgGETSchema;

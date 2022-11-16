@@ -1,10 +1,12 @@
 const config = require("../config");
 const ethers = require("ethers");
 const getDepositHandler = require("../handlers/getDepositHandler");
-const walletService = require("./new_wallet");
+const walletService = require("./walletService");
 const { tripsPaid } = require("../database/database");
 const driversPayments = require("./driverPayments");
-const { REPL_MODE_SLOPPY } = require("repl");
+const usersPayments = require("./userPayments");
+
+
 
 async function getContract(config, wallet) {
   return new ethers.Contract(config.contractAddress, config.contractAbi, wallet);
@@ -14,13 +16,17 @@ async function getContract(config, wallet) {
 const deposits = {};
 
 async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
-    riderWallet = await walletService.getRiderWallet(riderUsername);
+  console.log("LLEGO WACHINGGGG");
+    riderWallet = await walletService.getWallet(riderUsername);
     const basicPayments = await getContract(config, riderWallet);
     const tx = await basicPayments.deposit({
       value: await ethers.utils.parseEther(amountToSend.toString()).toHexString(),
+      
     });
+
     tx.wait(1).then(
       receipt => {
+        console.log("PAPAPAPPAPASPPS");
         console.log("Transaction mined");
         const firstEvent = receipt && receipt.events && receipt.events[0];
         console.log(firstEvent);
@@ -37,10 +43,12 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
             driverUsername: driverUsername,
             tripID: tripID
           }
-          driversPayments.saveAmountToDriver(driverUsername,amountToSend);
+          usersPayments.saveAmountToUser(driverUsername,amountToSend);
+          //driversPayments.saveAmountToDriver(driverUsername,amountToSend);
           tripsPaid.insertOne(doc);
         } else {
           //falla la transaccion
+          console.log("ESTOY ACCCA WACHIN");
           console.error(`Payment not created in tx ${tx.hash}`);
         }
       },
@@ -54,16 +62,19 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
         console.error(message);
       },
     );
+    console.log("LLEGO ACCCAAASSSA")
     return tx;
-  };
+};
 
 
-async function withdraw(driverUsername, amountToWithdraw) {
-    const driverWallet = await walletService.getDriverWallet(driverUsername);
+
+
+async function withdraw(username, amountToWithdraw, userWalletAddres) {
+    //const userWallet = await walletService.getWallet(username);
     const ownerWallet = await walletService.getDeployerWallet();
     const basicPayments = await getContract(config, ownerWallet);
     const tx = await basicPayments.sendPayment(
-        driverWallet.address,
+        userWalletAddres,
         await ethers.utils.parseEther(amountToWithdraw.toString()).toHexString(),{
             gasLimit: 100000,
         }
@@ -80,7 +91,7 @@ async function withdraw(driverUsername, amountToWithdraw) {
             senderAddress: firstEvent.args.sender,
             amountSent: firstEvent.args.amount,
             };
-            driversPayments.discountAmountToDriver(driverUsername,amountToWithdraw);
+            usersPayments.discountAmountToUser(username,amountToWithdraw);
         } else {
             //falla la transaccion
             console.error(`Payment not created in tx ${tx.hash}`);
@@ -100,43 +111,43 @@ async function withdraw(driverUsername, amountToWithdraw) {
 };
 
 async function firstDeposit(username,amount){
-  const riderWallet = await walletService.getRiderWallet(username);
+  const userWallet = await walletService.getWallet(username);
   const ownerWallet = await walletService.getDeployerWallet();
-  const basicPayments = await getContract(config, ownerWallet);
-  const tx = await basicPayments.sendPayment(
-      riderWallet.address,
-      await ethers.utils.parseEther(amount.toString()).toHexString(),{
-          gasLimit: 100000,
-      }
-  );
-  tx.wait(1).then(
-      receipt => {
-      console.log("Transaction mined");
-      const firstEvent = receipt && receipt.events && receipt.events[0];
-      console.log(firstEvent);
-      if (firstEvent && firstEvent.event == "PaymentMade") {
-          //Una vez confirmada la transaccion
-          //guardar, etc
-          deposits[tx.hash] = {
-          senderAddress: firstEvent.args.sender,
-          amountSent: firstEvent.args.amount,
-          };
-      } else {
-          //falla la transaccion
-          console.error(`Payment not created in tx ${tx.hash}`);
-      }
-      },
-      error => {
-      const reasonsList = error.results && Object.values(error.results).map(o => o.reason);
-      const message = error instanceof Object && "message" in error ? error.message : JSON.stringify(error);
-      console.error("reasons List");
-      console.error(reasonsList);
+    const basicPayments = await getContract(config, ownerWallet);
+    const tx = await basicPayments.sendPayment(
+        userWallet.address,
+        await ethers.utils.parseEther(amount.toString()).toHexString(),{
+            gasLimit: 100000,
+        }
+    );
+    tx.wait(1).then(
+        receipt => {
+        console.log("Transaction mined");
+        const firstEvent = receipt && receipt.events && receipt.events[0];
+        console.log(firstEvent);
+        if (firstEvent && firstEvent.event == "PaymentMade") {
+            //Una vez confirmada la transaccion
+            //guardar, etc
+            deposits[tx.hash] = {
+            senderAddress: firstEvent.args.sender,
+            amountSent: firstEvent.args.amount,
+            };
+        } else {
+            //falla la transaccion
+            console.error(`Payment not created in tx ${tx.hash}`);
+        }
+        },
+        error => {
+        const reasonsList = error.results && Object.values(error.results).map(o => o.reason);
+        const message = error instanceof Object && "message" in error ? error.message : JSON.stringify(error);
+        console.error("reasons List");
+        console.error(reasonsList);
 
-      console.error("message");
-      console.error(message);
-      },
-  );
-  return tx;
+        console.error("message");
+        console.error(message);
+        },
+    );
+    return tx;
 };
 
 
