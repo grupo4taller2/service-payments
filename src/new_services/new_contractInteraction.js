@@ -21,6 +21,8 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
     const basicPayments = await getContract(config, riderWallet);
     const tx = await basicPayments.deposit({
       value: await ethers.utils.parseEther(amountToSend.toString()).toHexString(),
+      gasLimit: 100000,
+    
       
     });
 
