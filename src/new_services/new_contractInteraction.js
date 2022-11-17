@@ -1,9 +1,7 @@
 const config = require("../config");
 const ethers = require("ethers");
-const getDepositHandler = require("../handlers/getDepositHandler");
 const walletService = require("./walletService");
 const { tripsPaid } = require("../database/database");
-const driversPayments = require("./driverPayments");
 const usersPayments = require("./userPayments");
 
 

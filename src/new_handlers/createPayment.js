@@ -19,21 +19,11 @@ async function createPaymentPOST(req,reply) {
         username: req.body.driver_username,
       })
     }
-/*
-  const verify = await walletService.verifyRiderBalance(req.body.rider_username, req.body.amount);
-  if(verify === false || req.body.amount === 0){
-    return reply.status(400).send(
-      {
-        message: 'Error. Insufficient Funds',
-        username: req.body.rider_username,
-      },
-    );
-  }
-*/
-let transaction = contractInteraction.deposit(req.body.rider_username, req.body.amount,
+
+  let transaction = contractInteraction.deposit(req.body.rider_username, req.body.amount,
     req.body.driver_username,
     req.body.tripID);
-return transaction;
+  return transaction;
 }
 
 module.exports = createPaymentPOST
