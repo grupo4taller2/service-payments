@@ -21,8 +21,8 @@ async function createWallet(username){
       username: username,
       walletAddres: wallet.address,
     }
-    walletsDB.insertOne(doc);
-    usersBalanceDB.insertOne(doc_balance);
+    await walletsDB.insertOne(doc);
+    await usersBalanceDB.insertOne(doc_balance);
     return docReturn;
 };
 
