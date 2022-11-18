@@ -20,6 +20,7 @@ async function createWithdrawPOST(req,reply) {
         },
       );
     }
+    await userPayments.discountAmountToUser(req.body.username,req.body.amount);
     return contractInteraction.withdraw(req.body.username, req.body.amount,req.body.walletAddress);
   }
 

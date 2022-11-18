@@ -17,9 +17,9 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
   console.log("LLEGO WACHINGGGG");
     riderWallet = await walletService.getWallet(riderUsername);
     const basicPayments = await getContract(config, riderWallet);
+    console.log(amountToSend.toString())
     const tx = await basicPayments.deposit({
-      value: await ethers.utils.parseEther(amountToSend.toString()).toHexString(),
-      gasLimit: 100000,
+      value: await ethers.utils.parseEther("0.005").toHexString()
     
       
     });
@@ -48,7 +48,7 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
           tripsPaid.insertOne(doc);
         } else {
           //falla la transaccion
-          console.log("ESTOY ACCCA WACHIN");
+          console.log("AYUDA ROMPIIIIIIII");
           console.error(`Payment not created in tx ${tx.hash}`);
         }
       },
@@ -75,9 +75,7 @@ async function withdraw(username, amountToWithdraw, userWalletAddres) {
     const basicPayments = await getContract(config, ownerWallet);
     const tx = await basicPayments.sendPayment(
         userWalletAddres,
-        await ethers.utils.parseEther(amountToWithdraw.toString()).toHexString(),{
-            gasLimit: 100000,
-        }
+        await ethers.utils.parseEther(amountToWithdraw.toString()).toHexString(),
     );
     tx.wait(1).then(
         receipt => {
@@ -91,9 +89,10 @@ async function withdraw(username, amountToWithdraw, userWalletAddres) {
             senderAddress: firstEvent.args.sender,
             amountSent: firstEvent.args.amount,
             };
-            usersPayments.discountAmountToUser(username,amountToWithdraw);
+            //usersPayments.discountAmountToUser(username,amountToWithdraw);
         } else {
             //falla la transaccion
+            usersPayments.saveAmountToUser(username,amountToWithdraw);
             console.error(`Payment not created in tx ${tx.hash}`);
         }
         },
@@ -116,9 +115,7 @@ async function firstDeposit(username,amount){
     const basicPayments = await getContract(config, ownerWallet);
     const tx = await basicPayments.sendPayment(
         userWallet.address,
-        await ethers.utils.parseEther(amount.toString()).toHexString(),{
-            gasLimit: 100000,
-        }
+        await ethers.utils.parseEther(amount.toString()).toHexString(),
     );
     tx.wait(1).then(
         receipt => {
