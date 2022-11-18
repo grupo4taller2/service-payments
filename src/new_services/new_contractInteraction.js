@@ -19,7 +19,7 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
     const basicPayments = await getContract(config, riderWallet);
     console.log(amountToSend.toString())
     const tx = await basicPayments.deposit({
-      value: await ethers.utils.parseEther("0.005").toHexString()
+      value: await ethers.utils.parseEther(amountToSend.toString()).toHexString()
     
       
     });
