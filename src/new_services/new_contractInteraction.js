@@ -148,6 +148,47 @@ async function firstDeposit(username,amount){
 };
 
 
+async function adminDeposit(username, amountToWithdraw, userWalletAddres) {
+  //const userWallet = await walletService.getWallet(username);
+  const ownerWallet = await walletService.getDeployerWallet();
+  const basicPayments = await getContract(config, ownerWallet);
+  const tx = await basicPayments.sendPayment(
+      userWalletAddres,
+      await ethers.utils.parseEther(amountToWithdraw.toString()).toHexString(),
+  );
+  tx.wait(1).then(
+      receipt => {
+      console.log("Transaction mined");
+      const firstEvent = receipt && receipt.events && receipt.events[0];
+      console.log(firstEvent);
+      if (firstEvent && firstEvent.event == "PaymentMade") {
+          //Una vez confirmada la transaccion
+          //guardar, etc
+          //guardar_transaccion del admin ???????
+          deposits[tx.hash] = {
+          senderAddress: firstEvent.args.sender,
+          amountSent: firstEvent.args.amount,
+          };
+          //usersPayments.discountAmountToUser(username,amountToWithdraw);
+      } else {
+          //falla la transaccion
+          //usersPayments.saveAmountToUser(username,amountToWithdraw);
+          console.error(`Payment not created in tx ${tx.hash}`);
+      }
+      },
+      error => {
+      const reasonsList = error.results && Object.values(error.results).map(o => o.reason);
+      const message = error instanceof Object && "message" in error ? error.message : JSON.stringify(error);
+      console.error("reasons List");
+      console.error(reasonsList);
+
+      console.error("message");
+      console.error(message);
+      },
+  );
+  return tx;
+};
+
 
 
 const getDepositReceipt =
@@ -159,4 +200,5 @@ const getDepositReceipt =
 exports.deposit = deposit;
 exports.withdraw = withdraw;
 exports.firstDeposit = firstDeposit;
+exports.adminDeposit = adminDeposit;
 
