@@ -90,9 +90,23 @@ async function getWalletData(username){
     return doc;
 };
 
+
+async function getContractBalance(){
+  const provider = new ethers.providers.AlchemyProvider(config.network, process.env.ALCHEMY_API_KEY);
+  const balance = await provider.getBalance(config.contractAddress);
+  etherBalance = await ethers.utils.formatEther(balance.toString());
+    balanceNumber = parseFloat(etherBalance);
+    const doc = {
+      balance: balanceNumber,
+    }
+  return doc;
+}
+
+
 exports.createWallet = createWallet;
 exports.verifyUserExistance = verifyUserExistance;
 exports.getWallet = getWallet;
 exports.getDeployerWallet = getDeployerWallet;
 exports.getWalletData = getWalletData;
 exports.getUserUnclaimedMoney = getUserUnclaimedMoney;
+exports.getContractBalance = getContractBalance;
