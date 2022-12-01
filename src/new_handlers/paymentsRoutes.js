@@ -6,7 +6,9 @@ const {
     getUserUnclaimedMoneySchema,
     getContractBalanceSchema,
     depositPostSchema,
-    getTransactionsSchema,}= require("../schemas/payments_schema");
+    getTransactionsSchema,
+    getTransactions24Schema,
+  }= require("../schemas/payments_schema");
   
 
   const createPaymentHandeler = require("./createPayment");
@@ -17,7 +19,7 @@ const {
   const getContractBalance = require("./getContractBalance");
   const createDeposit = require("./createDeposit");
   const getTransactions = require('./getTransactions');
-
+  const getTransactions24 = require('./getTransaction24');
   
   async function paymentsRoutes(fastify, getUserOpts, done) {
     
@@ -81,6 +83,14 @@ const {
         {
           schema: getTransactionsSchema,
           handler: getTransactions,
+        }
+      )
+
+      fastify.get(
+        '/transactions/24',
+        {
+          schema: getTransactions24Schema,
+          handler: getTransactions24,
         }
       )
 
