@@ -115,7 +115,24 @@ const depositPostSchema = {
   },
 };
 
-
+const getTransactionsSchema = {
+  description: 'Get transactions',
+  tags: ['Payments'],
+  querystring: {
+    offset: { type: 'integer', description: 'pagination offset' },
+    limit: { type: 'integer', description: 'pagination limit, get up to {limit} users' },
+  },
+  response: {
+    404: {
+      description: 'Bad Request. Insufficient Funds',
+      type: 'object',
+      properties: {
+        message: { type: 'string', default: 'Error. Insufficient Funds' },
+        username: { type: 'string' },
+      },
+    },
+  },
+}
 
 
 exports.PaymentPostSchema = PaymentPostSchema;
@@ -125,3 +142,4 @@ exports.getUserWalletSchema = getUserWalletSchema;
 exports.getUserUnclaimedMoneySchema = getUserUnclaimedMoneySchema;
 exports.getContractBalanceSchema= getContractBalanceSchema;
 exports.depositPostSchema = depositPostSchema;
+exports.getTransactionsSchema = getTransactionsSchema;

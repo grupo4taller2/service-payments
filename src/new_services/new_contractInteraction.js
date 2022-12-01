@@ -41,7 +41,8 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
             riderUsername: riderUsername,
             amount: amountToSend,
             driverUsername: driverUsername,
-            tripID: tripID
+            tripID: tripID,
+            createdAt: new Date()
           }
           usersPayments.saveAmountToUser(driverUsername,amountToSend);
           //driversPayments.saveAmountToDriver(driverUsername,amountToSend);
