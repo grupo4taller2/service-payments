@@ -134,6 +134,20 @@ const getTransactionsSchema = {
   },
 }
 
+const getTransactions24Schema = {
+  description: 'Get transactions in last 24 hours',
+  tags: ['Payments'],
+  response: {
+    404: {
+      description: 'Bad Request. Insufficient Funds',
+      type: 'object',
+      properties: {
+        message: { type: 'string', default: 'Error. Insufficient Funds' },
+        username: { type: 'string' },
+      },
+    },
+  },
+}
 
 exports.PaymentPostSchema = PaymentPostSchema;
 exports.WithdrawPostSchema = WithdrawPostSchema;
@@ -143,3 +157,4 @@ exports.getUserUnclaimedMoneySchema = getUserUnclaimedMoneySchema;
 exports.getContractBalanceSchema= getContractBalanceSchema;
 exports.depositPostSchema = depositPostSchema;
 exports.getTransactionsSchema = getTransactionsSchema;
+exports.getTransactions24Schema = getTransactions24Schema;
