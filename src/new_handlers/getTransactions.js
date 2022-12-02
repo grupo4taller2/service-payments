@@ -5,7 +5,7 @@ async function transactionsGET(req,reply) {
     console.log(req.query.offset)
     console.log("LIMIT")
     console.log(req.query.limit)
-    const tx = await transactionService.getTransactions(req.query.offset,req.query.limit);
+    const tx = await transactionService.getPayments(req.query.offset,req.query.limit);
     return reply.code(200).send(tx);
   }
 
