@@ -14,6 +14,7 @@ const tripsPaid = database.collection('tripsPaid');
 const driversAmount = database.collection('driversAmount');
 const walletsDB = database.collection('usersWallets');
 const usersBalanceDB = database.collection('usersBalance');
+const withdrawsDB = database.collection('withdrawsDB');
 
 exports.ridersWallets = ridersWallets;
 exports.driversWallets = driversWallets;
@@ -21,5 +22,6 @@ exports.tripsPaid = tripsPaid;
 exports.driversAmount = driversAmount;
 exports.walletsDB = walletsDB;
 exports.usersBalanceDB = usersBalanceDB;
+exports.withdrawsDB = withdrawsDB;
 
 //exports.RiderQualyAvgGETSchema = RiderQualyAvgGETSchema;
