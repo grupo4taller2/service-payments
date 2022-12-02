@@ -11,7 +11,6 @@ const createWalletSchema = {
 };
 
 
-
 const getUserWalletSchema = {
   description: 'Get a wallet for a user',
   tags: ['Payments Users'],
