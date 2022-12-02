@@ -2,6 +2,7 @@ const config = require("../config");
 const ethers = require("ethers");
 const walletService = require("./walletService");
 const { tripsPaid } = require("../database/database");
+const { withdrawsDB } = require("../database/database");
 const usersPayments = require("./userPayments");
 
 
@@ -90,6 +91,14 @@ async function withdraw(username, amountToWithdraw, userWalletAddres) {
             senderAddress: firstEvent.args.sender,
             amountSent: firstEvent.args.amount,
             };
+            const doc = {
+              username: username,
+              amount: amountToWithdraw,
+              wallet: userWalletAddres,
+              createdAt: new Date()
+            }
+            //driversPayments.saveAmountToDriver(driverUsername,amountToSend);
+            withdrawsDB.insertOne(doc);
             //usersPayments.discountAmountToUser(username,amountToWithdraw);
         } else {
             //falla la transaccion
