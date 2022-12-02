@@ -16,6 +16,7 @@ const walletsDB = database.collection('usersWallets');
 const usersBalanceDB = database.collection('usersBalance');
 const withdrawsDB = database.collection('withdrawsDB');
 
+
 exports.ridersWallets = ridersWallets;
 exports.driversWallets = driversWallets;
 exports.tripsPaid = tripsPaid;
