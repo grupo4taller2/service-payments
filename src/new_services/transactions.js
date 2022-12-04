@@ -2,7 +2,14 @@ const { tripsPaid } = require("../database/database");
 const { withdrawsDB} = require("../database/database");
 
 async function getPayments(offset,limit){
-
+    let pagina_actual;
+    if(offset == 0){
+        pagina_actual = 1
+    } else{
+        pagina_actual = (offset / limit) + 1 
+    }
+    const cantidad_tx = await tripsPaid.count()
+    const total_pages = Math.ceil(cantidad_tx / limit)
     list_tx = []
     transactions = await tripsPaid.find().sort({"_id":-1}).skip(offset).limit(limit);
     for await (const doc of transactions) {
@@ -15,7 +22,12 @@ async function getPayments(offset,limit){
         list_tx.push(new_doc);
 
     }
-    return list_tx;
+    const response = {
+        actual_page: pagina_actual,
+        total_pages: total_pages,
+        transactions: list_tx
+    }
+    return response;
 }
 
 async function getPayments24(){
