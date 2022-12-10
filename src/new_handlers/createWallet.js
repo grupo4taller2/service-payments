@@ -10,7 +10,16 @@ async function ridersWalletPOST(req, reply) {
       })
     }
    let reply_service = await walletService.createWallet(req.params.username);
-    let transaction = contractInteraction.firstDeposit(req.params.username, 0.03);
+    let transaction = await contractInteraction.firstDeposit(req.params.username, 0.03);
+    console.log(transaction);
+    if(transaction === false){
+      console.log("soy false");
+      return reply.status(500).send(
+        {
+          message: 'Error. The transaction failed',
+        }
+      )
+    }
     return reply.code(200).send(reply_service);;
   }
 

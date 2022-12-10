@@ -1,17 +1,29 @@
 const config = require("./config");
 const swagger = require('./plugins/swagger');
 // Require the framework and instantiate it
-const fastify = require("fastify")({ logger: true });
+//const fastify = require("fastify")({ logger: true });
+const fastify = require('fastify');
 const paymentRoutes = require("./new_handlers/paymentsRoutes");
 
 
-
+/*
 fastify.register(require('@fastify/formbody'));
 fastify.register(swagger);
 fastify.register(paymentRoutes, { prefix: '/api/v1/payments' });
+*/
 
+// Run the server    // await userPayments.discountAmountToUser(req.body.username,req.body.amount);
 
-// Run the server
+function buildServer() {
+  const app = fastify({
+    logger: true,
+  });
+
+  app.register(require('@fastify/formbody'));
+  app.register(swagger);
+  app.register(paymentRoutes, { prefix: '/api/v1/payments' });
+  return app;
+}
 
 const start = async () => {
   try {;
@@ -25,4 +37,6 @@ const start = async () => {
     fastify.log.error(err);
   }
 };
-start();
+//start();
+
+exports.buildServer = buildServer;

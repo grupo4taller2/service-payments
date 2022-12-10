@@ -20,10 +20,18 @@ async function createPaymentPOST(req,reply) {
       })
     }
 
-  let transaction = contractInteraction.deposit(req.body.rider_username, req.body.amount,
+  let transaction = await contractInteraction.deposit(req.body.rider_username, req.body.amount,
     req.body.driver_username,
     req.body.tripID);
-  return transaction;
+  
+  if(transaction === false){
+    return reply.status(500).send(
+      {
+        message: 'Error. The transaction failed',
+      }
+    )
+  }
+  return reply.status(202).send(transaction);
 }
 
 module.exports = createPaymentPOST

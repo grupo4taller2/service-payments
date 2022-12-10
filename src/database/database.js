@@ -1,9 +1,10 @@
 require("dotenv").config();
 const { MongoClient } = require("mongodb");
 // Replace the uri string with your connection string.
-const uri =
-  "mongodb+srv://fiuber:fiuber12345@fiuber.gojhw5h.mongodb.net/?retryWrites=true&w=majority";
+
+
 const client = new MongoClient(process.env.MONGO_ATLAS_PAYMENTS);
+//const client = new MongoClient("mongodb://mongodb:27017/");
 
 
 
@@ -15,6 +16,7 @@ const driversAmount = database.collection('driversAmount');
 const walletsDB = database.collection('usersWallets');
 const usersBalanceDB = database.collection('usersBalance');
 const withdrawsDB = database.collection('withdrawsDB');
+const adminDepositDB = database.collection('adminDepositDB');
 
 
 exports.ridersWallets = ridersWallets;
@@ -24,5 +26,4 @@ exports.driversAmount = driversAmount;
 exports.walletsDB = walletsDB;
 exports.usersBalanceDB = usersBalanceDB;
 exports.withdrawsDB = withdrawsDB;
-
-//exports.RiderQualyAvgGETSchema = RiderQualyAvgGETSchema;
+exports.adminDepositDB = adminDepositDB;
