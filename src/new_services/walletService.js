@@ -16,6 +16,7 @@ async function createWallet(username){
     const doc_balance = {
         username: username,
         amount: 0,
+        status: 'unblock',
     }
     const docReturn = {
       username: username,

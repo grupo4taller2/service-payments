@@ -11,6 +11,7 @@ lib/
 node_modules/
 typechain/
 profiles/
+test/
 docs/
 # files
 .env

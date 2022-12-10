@@ -20,8 +20,28 @@ async function createWithdrawPOST(req,reply) {
         },
       );
     }
-    await userPayments.discountAmountToUser(req.body.username,req.body.amount);
-    return contractInteraction.withdraw(req.body.username, req.body.amount,req.body.walletAddress);
+    let verify_block = await userPayments.verifyUnblockWallet(req.body.username,req.body.amount);
+    if(verify_block === false ){
+      return reply.status(400).send(
+        {
+          message: 'Error. The wallet is locked',
+          username: req.body.username,
+        },
+      );
+    }
+    // await userPayments.discountAmountToUser(req.body.username,req.body.amount);
+    let responseValue = await contractInteraction.withdraw(req.body.username, req.body.amount,req.body.walletAddress);
+    console.log(responseValue);
+    if(responseValue === false){
+      console.log("soy false");
+      return reply.status(500).send(
+        {
+          message: 'Error. The transaction failed',
+        }
+      )
+    }
+
+    return responseValue;
   }
 
 module.exports = createWithdrawPOST
