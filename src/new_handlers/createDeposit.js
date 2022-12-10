@@ -3,8 +3,6 @@ const contractInteraction = require("../new_services/new_contractInteraction")
 const userPayments = require("../new_services/userPayments");
 
 async function createDepositPOST(req,reply) {
-    
-    
     let responseValue = await contractInteraction.adminDeposit(req.body.admin_username, req.body.amount,req.body.walletAddress);
     console.log(responseValue);
     if(responseValue === false){
@@ -15,8 +13,8 @@ async function createDepositPOST(req,reply) {
         }
       )
     }
-
-    return responseValue;
+    
+    return reply.status(202).send(responseValue);
   }
 
 module.exports = createDepositPOST
