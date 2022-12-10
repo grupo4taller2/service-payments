@@ -29,7 +29,7 @@ async function createWithdrawPOST(req,reply) {
         },
       );
     }
-    // await userPayments.discountAmountToUser(req.body.username,req.body.amount);
+    
     let responseValue = await contractInteraction.withdraw(req.body.username, req.body.amount,req.body.walletAddress);
     console.log(responseValue);
     if(responseValue === false){
@@ -41,7 +41,7 @@ async function createWithdrawPOST(req,reply) {
       )
     }
 
-    return responseValue;
+    return reply.status(202).send(responseValue);
   }
 
 module.exports = createWithdrawPOST

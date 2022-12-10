@@ -8,7 +8,7 @@ async function saveAmountToUser(username,amount){
     console.log("PREVIOS");
     console.log(previousValue.amount);
     const newAmount = previousValue.amount + finalPayment;
-    console.log("NEWw");
+    console.log("NEW");
     console.log(newAmount);
     const options = { upsert: true };
     const updateDoc = {
