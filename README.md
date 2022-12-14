@@ -1,6 +1,6 @@
 # BasicPayments
 
-Smart contract and basic service to solve payments in the Taller de Programacion 2' projects.
+Smart contract and service to solve payments in the FIUBER project.
 
 ## Installation
 
@@ -41,8 +41,7 @@ To run the tests, after you installed the dependencies, just run
 `npm t`
 
 
-To run the api test you have to build the api and run the next line in other terminal
-`docker exec -it fiuber.service-payments.dev npm run cucumber`
+To run the api test you have to build the app (see FIUBER repository for instructions) and run `docker exec -it fiuber.service-payments.dev npm run cucumber` in other terminal
 This tests may fail because we use an old version of mongodb (4.0) or because of the wallet creation api migth fail in some environments
 
 #### Linting
