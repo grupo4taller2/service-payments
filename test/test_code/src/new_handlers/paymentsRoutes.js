@@ -93,6 +93,14 @@ const {
           handler: getTransactions24,
         }
       )
+      
+      fastify.get(
+        '/fake',
+        {
+          schema: getTransactions24Schema,
+          handler: getTransactions24,
+        }
+      )
 
       done();
     }
