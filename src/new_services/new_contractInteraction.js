@@ -45,7 +45,6 @@ async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
           tripsPaid.insertOne(doc);
         } else {
           //falla la transaccion
-          console.log("AYUDA ROMPIIIIIIII");
           console.error(`Payment not created in tx ${tx.hash}`);
         }
       },

@@ -16,9 +16,12 @@ This is a minimum project that will serve as a guide to help students to do the 
 
 ### Start process
 
-To start the process, after you installed the dependencies and deployed the smart contracts to kovan, you can run
+To start the process, after you installed the dependencies and deployed the smart contracts to Goerli, you can run
 
 `npm start`
+or
+`npm dev-start`
+If you want to use nodemon and reaload the server everytime you save a change
 
 keep in mind that you should have everything in config set before that.
 
@@ -149,7 +152,7 @@ This will generate a browsable html file within the `./docs` folder, to view it 
 
 To deploy the smart contracts just run
 
-`npm run deploy-kovan`
+`npm run deploy-goerli`
 
 `npm run deploy-local`
 
@@ -164,3 +167,4 @@ To get the deployed contract address just look in the `deployments/<network>/Bas
 Other useful scripts can be found using
 
 `npm run`
+

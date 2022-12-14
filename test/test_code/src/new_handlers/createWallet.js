@@ -1,8 +1,7 @@
 const walletService  = require("../new_services/walletService");
-const contractInteraction = require("../new_services/new_contractInteraction");
-const userPayments = require("../new_services/userPayments");
+const contractInteraction = require("../new_services/new_contractInteraction")
 
-async function walletPOST(req, reply) {
+async function ridersWalletPOST(req, reply) {
   const riderExists = await walletService.verifyUserExistance(req.params.username);
     if(riderExists === true){
       return reply.code(400).send({
@@ -24,4 +23,4 @@ async function walletPOST(req, reply) {
     return reply.code(202).send(reply_service);;
   }
 
-module.exports = walletPOST;
+module.exports = ridersWalletPOST;

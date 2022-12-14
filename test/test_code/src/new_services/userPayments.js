@@ -8,7 +8,7 @@ async function saveAmountToUser(username,amount){
     console.log("PREVIOS");
     console.log(previousValue.amount);
     const newAmount = previousValue.amount + finalPayment;
-    console.log("NEW");
+    console.log("NEWw");
     console.log(newAmount);
     const options = { upsert: true };
     const updateDoc = {
@@ -40,6 +40,7 @@ async function verifyUnblockWallet(username,amount){
 }
 
 async function discountAmountToUser(username,amount){
+  console.log("LLEGO A DISCOUNT AMOUNT");
   let amountFloat = parseFloat(amount);
   let previousValue = await usersBalanceDB.findOne({ username: username });
   const newAmount = previousValue.amount - amountFloat;
@@ -76,26 +77,9 @@ async function unblockWallet(username){
   usersBalanceDB.updateOne( { username: username },updateDoc,options);
 }
 
-async function unblockWallets(){
-  let wallets = await usersBalanceDB.find();
-  for await (const doc of wallets) {
-    const options = { upsert: true };
-    const updateDoc = {
-      $set: {
-        status: 'unblock',
-      },
-    };
-    usersBalanceDB.updateOne( { username: doc.username },updateDoc,options);
-
-}
-  console.log("DESBLOQUEE LA WALLET");
-}
-
-
 exports.saveAmountToUser = saveAmountToUser;
 exports.verifyUnclaimedMoney = verifyUnclaimedMoney;
 exports.discountAmountToUser = discountAmountToUser;
 exports.verifyUnblockWallet = verifyUnblockWallet;
 exports.blockWallet = blockWallet;
 exports.unblockWallet = unblockWallet;
-exports.unblockWallets = unblockWallets;

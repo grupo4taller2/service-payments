@@ -6,7 +6,13 @@ const fastify = require('fastify');
 const paymentRoutes = require("./new_handlers/paymentsRoutes");
 const resetRoutes = require('./new_handlers/reset');
 
-// Run the server 
+/*
+fastify.register(require('@fastify/formbody'));
+fastify.register(swagger);
+fastify.register(paymentRoutes, { prefix: '/api/v1/payments' });
+*/
+
+// Run the server    // await userPayments.discountAmountToUser(req.body.username,req.body.amount);
 
 function buildServer() {
   const app = fastify({
@@ -30,6 +36,20 @@ function buildTestServer() {
   app.register(resetRoutes, { prefix: '/api/v1/payments' });
   return app;
 }
+
+const start = async () => {
+  try {;
+    await fastify.listen({
+      host: process.env.SERVICE_PAYMENTS_HOST ,
+      port: process.env.SERVICE_PAYMENTS_PORT || process.env.PORT,
+    });
+    console.log(`server listening on ${fastify.server.address().port}`)
+    //fastify.log.info(`server listening on ${fastify.server.address().port}`);
+  } catch (err) {
+    fastify.log.error(err);
+  }
+};
+//start();
 
 exports.buildServer = buildServer;
 exports.buildTestServer = buildTestServer;
