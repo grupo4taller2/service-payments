@@ -15,6 +15,10 @@ const walletsDB = database.collection('usersWallets');
 const usersBalanceDB = database.collection('usersBalance');
 const withdrawsDB = database.collection('withdrawsDB');
 const adminDepositDB = database.collection('adminDepositDB');
+const usersDiscountDB = database.collection('usersDiscountDB');
+
+const db = client.db('fastapi');
+const token_collection = db.collection('token_collection');
 
 exports.tripsPaid = tripsPaid;
 exports.driversAmount = driversAmount;
@@ -23,3 +27,5 @@ exports.usersBalanceDB = usersBalanceDB;
 exports.withdrawsDB = withdrawsDB;
 exports.adminDepositDB = adminDepositDB;
 exports.database = database;
+exports.usersDiscountDB = usersDiscountDB;
+exports.token_collection = token_collection;
