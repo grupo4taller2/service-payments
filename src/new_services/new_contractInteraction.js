@@ -13,7 +13,7 @@ async function getContract(config, wallet) {
 };
 
 async function getFinalPrice(username,amount) {
-  const docDiscount = await usersDiscountDB.findOne({username:username},{"status":"valid"});
+  const docDiscount = await usersDiscountDB.findOne({username:username, "status":"valid"});
   console.log(docDiscount);
   if (docDiscount === null) {
     return amount;
@@ -21,6 +21,14 @@ async function getFinalPrice(username,amount) {
   const aux = (docDiscount.percentage * amount) / 100;
   const finalPrice = amount - aux;
   console.log(finalPrice);
+  const updateDoc = {
+    $set: {
+      status: "invalid",
+    },
+  };
+  console.log("INVALIDOS");
+  console.log(docDiscount);
+  usersDiscountDB.updateOne( { _id: docDiscount._id },updateDoc);
   return finalPrice;
 }
 

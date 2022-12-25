@@ -82,6 +82,18 @@ async function findMultiple(){
   console.log("FINAL");
   //console.log(finalUsers.length);
   
+  const invalidDiscount = await usersDiscountDB.find({"createdAt":{$lt:new Date(Date.now() - 380*60*60 * 1000)}})
+  for await (const invalidDoc of invalidDiscount) {
+    const updateDoc = {
+      $set: {
+        status: "invalid",
+      },
+    };
+    console.log("INVALIDOS");
+    console.log(invalidDoc);
+    usersDiscountDB.updateOne( { _id: invalidDoc._id },updateDoc);
+    //listUsualUsers.push(doc.riderUsername);
+  }
   return {first: fede,
     second: fire}
 }
@@ -97,6 +109,6 @@ const task = new AsyncTask(
     (err) => { /* handle errors here */ }
 )
 
-const job = new SimpleIntervalJob({ minutes: 50, }, task);
+const job = new SimpleIntervalJob({ seconds: 60, }, task);
 
 module.exports = job;
