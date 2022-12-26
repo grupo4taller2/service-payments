@@ -59,7 +59,10 @@
     "nodemon": "^2.0.20",
     "mongodb": "^4.0.0 ",
     "@cucumber/cucumber": "^8.6.0",
-    "@cucumber/pretty-formatter": "^1.0.0"
+    "@cucumber/pretty-formatter": "^1.0.0",
+    "@fastify/schedule": "^4.1.0",
+    "toad-scheduler": "2.1.0",
+    "expo-server-sdk": "^3.7.0"
   },
   "comments": {
     "dependencies": "hardhat-solhint includes an old version of solhint, that's why specific solhint dependency is added"

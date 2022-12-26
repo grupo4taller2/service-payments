@@ -5,22 +5,42 @@ const { tripsPaid } = require("../database/database");
 const { withdrawsDB } = require("../database/database");
 const usersPayments = require("./userPayments");
 const { adminDepositDB } = require("../database/database");
-
+const { usersDiscountDB } = require("../database/database");
 
 
 async function getContract(config, wallet) {
   return new ethers.Contract(config.contractAddress, config.contractAbi, wallet);
 };
 
+async function getFinalPrice(username,amount) {
+  const docDiscount = await usersDiscountDB.findOne({username:username, "status":"valid"});
+  console.log(docDiscount);
+  if (docDiscount === null) {
+    return amount;
+  }
+  const aux = (docDiscount.percentage * amount) / 100;
+  const finalPrice = amount - aux;
+  console.log(finalPrice);
+  const updateDoc = {
+    $set: {
+      status: "invalid",
+    },
+  };
+  console.log("INVALIDOS");
+  console.log(docDiscount);
+  usersDiscountDB.updateOne( { _id: docDiscount._id },updateDoc);
+  return finalPrice;
+}
 
 async function deposit(riderUsername, amountToSend,driverUsername,tripID) {
     riderWallet = await walletService.getWallet(riderUsername);
     const basicPayments = await getContract(config, riderWallet);
+    const finalPrice = await getFinalPrice(riderUsername,amountToSend)
     console.log(amountToSend.toString())
     let tx;
     try {
         tx = await basicPayments.deposit({
-        value: await ethers.utils.parseEther(amountToSend.toString()).toHexString()
+        value: await ethers.utils.parseEther(finalPrice.toString()).toHexString()
         });
     } catch{
       return false;
