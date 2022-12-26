@@ -14,7 +14,7 @@ async function findMultiple(){
   const recentDates = await tripsPaid.aggregate(
     [
       {
-        $match : {"createdAt":{$gt:new Date(Date.now() - 380*60*60 * 1000)}}
+        $match : {"createdAt":{$gt:new Date(Date.now() - 8*60*60 * 1000)}}
       },
       {
         $group:
@@ -35,10 +35,7 @@ async function findMultiple(){
   //console.log(UnusualRiders);
   let listUnusualUsers = [];
   for await (const docUnusual of UnusualRiders) {
-    //console.log("SOMETHING");
-    //console.log(docUnusual);
     listUnusualUsers.push(docUnusual.username);
-    //listUsualUsers.push(doc.riderUsername);
   }
   console.log(UnusualRiders.length);
   console.log(listUnusualUsers);
@@ -46,7 +43,7 @@ async function findMultiple(){
   const usersWithDiscounts= await usersDiscountDB.aggregate(
     [
       {
-        $match : {"createdAt":{$gt:new Date(Date.now() - 380*60*60 * 1000)}}
+        $match : {"createdAt":{$gt:new Date(Date.now() - 300*60*60 * 1000)}}
       },
       {
         $group:
@@ -59,10 +56,7 @@ async function findMultiple(){
  )
  let listUsersDicounts = [];
   for await (const docDiscount of usersWithDiscounts) {
-    //console.log("SOMETHING");
-    //console.log(docUnusual);
     listUsersDicounts.push(docDiscount._id);
-    //listUsualUsers.push(doc.riderUsername);
   }
   let userNotification= [];
   for await (const user of listUnusualUsers) {
@@ -72,9 +66,9 @@ async function findMultiple(){
         username: user,
         createdAt: new Date(),
         status: "valid",
-        percentage: 50, 
+        percentage: 25, 
       }
-      //await usersDiscountDB.insertOne(doc);
+      await usersDiscountDB.insertOne(doc);
       userNotification.push(user);
     }
   }
@@ -82,17 +76,16 @@ async function findMultiple(){
   console.log("FINAL");
   //console.log(finalUsers.length);
   
-  const invalidDiscount = await usersDiscountDB.find({"createdAt":{$lt:new Date(Date.now() - 380*60*60 * 1000)}})
+  const invalidDiscount = await usersDiscountDB.find({"createdAt":{$lt:new Date(Date.now() - 300*60*60 * 1000)}})
   for await (const invalidDoc of invalidDiscount) {
     const updateDoc = {
       $set: {
         status: "invalid",
       },
     };
-    console.log("INVALIDOS");
-    console.log(invalidDoc);
+    //console.log("INVALIDOS");
+    //console.log(invalidDoc);
     usersDiscountDB.updateOne( { _id: invalidDoc._id },updateDoc);
-    //listUsualUsers.push(doc.riderUsername);
   }
   return {first: fede,
     second: fire}
