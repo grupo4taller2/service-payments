@@ -98,6 +98,6 @@ const task = new AsyncTask(
     (err) => { console.log("ERROR")}
 )
 
-const job = new SimpleIntervalJob({ seconds: 60 }, task);
+const job = new SimpleIntervalJob({ hours: 24 }, task);
 
 module.exports = job;
