@@ -21,6 +21,15 @@ const getUserWalletSchema = {
       },
   },
   response: {
+    200: {
+      description: 'Successful Request',
+      type: 'object',
+      properties: {
+        username: { type: 'string' },
+        walletAddres: { type: 'string' },
+        balance: { type: 'number' },
+      }
+    },
     404: {
       description: 'Bad Request. Insufficient Funds',
       type: 'object',

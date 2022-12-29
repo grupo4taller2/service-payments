@@ -83,4 +83,3 @@ To get the deployed contract address just look in the `deployments/<network>/Bas
 Other useful scripts can be found using
 
 `npm run`
-
