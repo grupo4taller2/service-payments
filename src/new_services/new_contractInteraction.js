@@ -222,8 +222,6 @@ async function adminDeposit(username, amountToWithdraw, userWalletAddres) {
 };
 
 
-
-
 exports.deposit = deposit;
 exports.withdraw = withdraw;
 exports.firstDeposit = firstDeposit;

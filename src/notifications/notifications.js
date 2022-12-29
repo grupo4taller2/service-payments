@@ -1,13 +1,14 @@
 const { Expo } = require('expo-server-sdk');
 const { token_collection } = require('../database/database')
 
-async function sendNotificationDiscount(users){
+async function sendNotificationDiscount(users, percentage){
+    const msg = `Your next trip is %${percentage} OFF`;
     console.log("COMIENZA NOTIFICATION");
     console.log(users);
     let somePushTokens = [];
     for (const username of users){
         const doc = await token_collection.findOne({"username": username});
-        console.log(doc);
+        //console.log(doc);
         if(doc === null){
             continue;
         }
@@ -28,15 +29,15 @@ async function sendNotificationDiscount(users){
             console.error(`Push token ${docPushToken.token} is not a valid Expo push token`);
             continue;
         }
-        console.log("PUSH TOKEN CORRECTO");
-        console.log(docPushToken.username);
-        console.log(docPushToken.token);
+        //console.log("PUSH TOKEN CORRECTO");
+        //console.log(docPushToken.username);
+        //console.log(docPushToken.token);
         // Construct a message (see https://docs.expo.io/push-notifications/sending-notifications/)
         messages.push({
             to: docPushToken.token,
             sound: 'default',
             title: docPushToken.username,
-            body: 'Your next trip has a discount',
+            body: msg,
             data: {},
         })
     }

@@ -5,16 +5,17 @@ const { tripsPaid } = require("../database/database");
 const { usersDiscountDB } = require("../database/database");
 const sendNotificationDiscount = require('../notifications/notifications');
 
+const HOURS_TRANSACTIONS = 24*15; // 24 horas por 15 dias
+const HOURS_VALID_DISCOUNTS = 24*15;
+const HOURS_INVALID_DISCOUNTS = 24*15;
+
 async function findMultiple(){
-  const queryFede = { username: "Fede_1998" };
-  const fede = await walletsDB.findOne(queryFede);
-  const queryFire = { username: "Fire_test" };
-  const fire = await walletsDB.findOne(queryFire);
+  console.log("COMINEZA");
   let listUsualUsers = [];
   const recentDates = await tripsPaid.aggregate(
     [
       {
-        $match : {"createdAt":{$gt:new Date(Date.now() - 8*60*60 * 1000)}}
+        $match : {"createdAt":{$gt:new Date(Date.now() - HOURS_TRANSACTIONS*60*60 * 1000)}}
       },
       {
         $group:
@@ -25,25 +26,25 @@ async function findMultiple(){
       }
     ]
  )
+ console.log("PASO PRIMERA TRIPS PAID");
+ console.log()
  for await (const doc of recentDates) {
   console.log(doc);
   listUsualUsers.push(doc._id);
 }
+  console.log("USUAL USERS")
   console.log(listUsualUsers);
   const UnusualRiders = await walletsDB.find({ username: {$not: {$in: listUsualUsers }}});
-  console.log("UNUSUAL RIDERS");
-  //console.log(UnusualRiders);
   let listUnusualUsers = [];
   for await (const docUnusual of UnusualRiders) {
     listUnusualUsers.push(docUnusual.username);
   }
-  console.log(UnusualRiders.length);
+  console.log("UNUSUAL USERS");
   console.log(listUnusualUsers);
-  //const usersWithDiscounts = await usersDiscountDB.find({ username: {$in: listUnusualUsers }});
   const usersWithDiscounts= await usersDiscountDB.aggregate(
     [
       {
-        $match : {"createdAt":{$gt:new Date(Date.now() - 300*60*60 * 1000)}}
+        $match : {"createdAt":{$gt:new Date(Date.now() - HOURS_VALID_DISCOUNTS*60*60 * 1000)}}
       },
       {
         $group:
@@ -61,47 +62,42 @@ async function findMultiple(){
   let userNotification= [];
   for await (const user of listUnusualUsers) {
     if (listUsersDicounts.includes(user) == false) {
-      console.log(user);
+      //console.log(user);
       const doc = {
         username: user,
         createdAt: new Date(),
         status: "valid",
-        percentage: 25, 
+        percentage: 50, 
       }
       await usersDiscountDB.insertOne(doc);
       userNotification.push(user);
     }
   }
-  await sendNotificationDiscount(userNotification);
-  console.log("FINAL");
-  //console.log(finalUsers.length);
+  await sendNotificationDiscount(userNotification, 50);
   
-  const invalidDiscount = await usersDiscountDB.find({"createdAt":{$lt:new Date(Date.now() - 300*60*60 * 1000)}})
+  const invalidDiscount = await usersDiscountDB.find({"createdAt":{$lt:new Date(Date.now() - HOURS_INVALID_DISCOUNTS*60*60 * 1000)}})
   for await (const invalidDoc of invalidDiscount) {
     const updateDoc = {
       $set: {
         status: "invalid",
       },
     };
-    //console.log("INVALIDOS");
-    //console.log(invalidDoc);
     usersDiscountDB.updateOne( { _id: invalidDoc._id },updateDoc);
   }
-  return {first: fede,
-    second: fire}
+  console.log("FINAL");
+  return ;
 }
 const task = new AsyncTask(
     'simple task',
     () => { 
-      console.log("HOLAA AMIGOS");
+      console.log("START DISCOUNTS");
       return findMultiple()
-      .then((result) => { console.log("10 segundos");
-    console.log(result.first);
-    console.log("FIRE TEST");
-    console.log(result.second);}) },
-    (err) => { /* handle errors here */ }
+      .then((result) => { 
+        console.log("DISCOUNTS APPLY");
+      }) },
+    (err) => { console.log("ERROR")}
 )
 
-const job = new SimpleIntervalJob({ seconds: 60, }, task);
+const job = new SimpleIntervalJob({ seconds: 60 }, task);
 
 module.exports = job;
